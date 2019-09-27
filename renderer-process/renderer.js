@@ -149,6 +149,7 @@ var str = progress({
 })
   })
   $('#openResultFileOptions').change(function(){
+      if($(this).val() != "choice") {
     var cmd = 'start '+$(this).val()+' '+path.join(__dirname, '../', fileResult);
     childProcess.exec(cmd, function (err, stdout, stderr) {
         if (err) {
@@ -156,6 +157,7 @@ var str = progress({
             return;
         }
     })
+}
 })
 //util function to filter json object on array data
     function filterTypes(itemKeys,accepted) {
