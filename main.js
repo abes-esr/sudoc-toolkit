@@ -1,8 +1,7 @@
 //require('electron-reload')(__dirname)
 require('update-electron-app')({
   repo: 'https://github.com/gegedenice/SudocToolkit',
-  updateInterval: '1 hour',
-  logger: require('electron-log')
+  updateInterval: '1 hour'
 })
 const { app, BrowserWindow} = require('electron')
 const path = require('path')
