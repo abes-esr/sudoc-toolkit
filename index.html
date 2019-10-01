@@ -38,7 +38,9 @@
                                     <p class="uk-comment-meta uk-margin-remove-top uk-text-center">
                                             Le fichier à importer doit être en format .csv avec séparateur point-virgule ; et entêtes de colonnes.
                                     </p>
-                                <button class="uk-button uk-button-secondary uk-align-center" id="openSourceFile">Importer un fichier</button>
+                                <button class="uk-button uk-button-secondary uk-align-center" id="openSourceFile">
+                                        <span class="uk-margin-small-right" uk-icon="push"></span>
+                                    Importer un fichier</button>
                             </p>
                             </div>
                             <div class="uk-card uk-card-hover uk-card-default uk-card-body">
@@ -58,29 +60,45 @@
                                     </div>
                                     </div>
                                     <div class="uk-margin">
-                                        <label class="uk-form-label" for="form-stacked-text">Donnez un en-tête à la colonne supplémentaire de résultats</label>
-                                        <div class="uk-form-controls">
-                                            <input class="uk-input uk-form-success" id="columnResultName" type="text">
+                                            <label class="uk-form-label" for="form-stacked-text">Donnez un en-tête à la colonne supplémentaire de résultats</label>
+                                            <div class="uk-form-controls">
+                                                <input class="uk-input uk-form-success" id="columnResultName" type="text">
+                                            </div>
                                         </div>
-                                    </div>
+                                        <div class="uk-margin">
+                                                <div class="uk-form-controls">
+                                                        <button class="uk-button uk-button-text" id="chooseResultFolderPath">Choisir un dossier de destination pour le fichier de résultat (output.csv)</button>
+                                                        <input type="hidden" id="resultFolderPath">
+                                                </div>
+                                            </div>
                             </div>
                             <div class="uk-card uk-card-hover uk-card-default uk-card-body">
-                                        <button class="uk-button uk-button-primary uk-width-1-1" id="parseFile">Go !</button>
+                                        <button class="uk-button uk-button-primary uk-width-1-1" id="parseFile">
+                                                <span class="uk-margin-small-right" uk-icon="settings"></span>
+                                            Go !</button>
                             </div>
                             <div class="uk-card uk-card-hover uk-card-default uk-card-body">
-                                        <div class="uk-button-group uk-align-center">
-                                            <button class="uk-button uk-button-default" id="showResultFile">Apercu</button>
-                                            <button class="uk-button uk-button-primary" id="">Ouvrir</button>
-                                            <div uk-dropdown>
-                                                    <div class="uk-form-controls uk-background-primary">
+                                        <div class="uk-text-center" uk-grid>
+                                                <div class="uk-width-1-2">
+                                                  <button class="uk-button uk-button-default" id="showResultFile">
+                                                        <span class="uk-margin-small-right" uk-icon="happy"></span>  
+                                                    Apercu</button>
+                                                </div>  
+                                                <div class="uk-width-1-2">
+                                                  <button class="uk-button uk-button-primary" id="">
+                                                        <span class="uk-margin-small-right" uk-icon="file-edit"></span>  
+                                                    Ouvrir</button>
+                                                  <div uk-dropdown>
+                                                    <div class="uk-form-controls">
                                                             <select class="uk-select" id="openResultFileOptions">
                                                                 <option value="choice">Choisir l'éditeur</option>
                                                                 <option value="Excel.exe">Excel</option>
                                                                 <option value="notepad++">Notepad</option>
                                                             </select>
                                                         </div>
-                                            </div>
-                                            <button class="uk-button uk-button-secondary" id="saveResultFile">Download</button>
+                                                  </div>
+                                                  </div>
+                                            <!--<button class="uk-button uk-button-secondary" id="saveResultFile">Download</button>-->
                                         </div>
                             </div>
                          </div>

@@ -16,14 +16,14 @@ const CanvasJS =  require('./canvasjs.min')
 
 //---variables declarations---//
 var fileName;
-var fileResult = 'data/output.csv'
+var fileResult = 'output.csv'
 var selectedOption;
 var chooseKey;
 var columnResultName;
 
 $('#options').change(function(){
     //first init variables
-    $("#checkboxIdResult").empty();$("#checkboxColumnsResult").empty();$('#columnResultName').val('');$('#chartContainer').empty();$('#fileResult').empty();
+    $("#checkboxIdResult").empty();$("#checkboxColumnsResult").empty();$('#columnResultName').val('');$('#chartContainer').empty();$('#fileResult').empty();$('#resultFolderPath').empty();
     selectedOption = $(this).val();
 })
 
@@ -43,8 +43,7 @@ $( "#openSourceFile" ).click(function() {
     .on('data', function(csvrow) {            
        return  csvrow.map(function(key){
         $("#checkboxIdResult").append("<label><input class='idChoice uk-checkbox' value='" + key + "' type='checkbox' /> "+key+"</label><br>")
-        $("#checkboxColumnsResult").append("<label><input class='columnsChoice uk-checkbox' value='" + key + "' type='checkbox' /> "+key+"</label><br>")
-    
+        $("#checkboxColumnsResult").append("<label><input class='columnsChoice uk-checkbox' value='" + key + "' type='checkbox' /> "+key+"</label><br>")   
        })   
     })
     .on('end',function() {
@@ -54,6 +53,22 @@ $( "#openSourceFile" ).click(function() {
         console.log('Stream has been Closed');
     });
    }); 
+})
+//----choose destination folder path---//
+$("#chooseResultFolderPath").click(function(){
+  dialog.showOpenDialog({
+        title:"Choisir un dossier de destination",
+        properties: ["openDirectory"]
+    }, function(folderPaths){
+        // folderPaths is an array that contains all the selected paths
+        if(folderPaths === undefined){
+            console.log("Pas de dossier de destination choisi");
+            return;
+        }else{
+         $("#resultFolderPath").val(path.join(folderPaths[0],fileResult));
+         console.log(path.join(folderPaths[0],fileResult))
+        }
+    })
 })
 //----read stream + api calls + write stream---//
 $( "#parseFile" ).click(function() {
@@ -74,10 +89,10 @@ var str = progress({
 .on('progress', function(progress) {
     $("#fileResult").append(Math.round(progress.percentage)+'% </br>')
 });
-    
+ 
     //streams
     var readStream = fs.createReadStream(fileName)
-    var writeStream = fs.createWriteStream(fileResult)
+    var writeStream = fs.createWriteStream($("#resultFolderPath").val())
     writeStream .on('end',function() {
         console.log('finish writing')
     })
@@ -107,13 +122,10 @@ var str = progress({
         })
          .on('data',function(record) {
             arrData.push(record)
-            console.log(arrData)
          })
          .on('end',function() {
              var total = arrData.length
             var counts = _.countBy(arrData,columnResultName);
-            //console.log(counts)
-           // console.log(_.invert(counts))
            var dataGraph = _.map(counts, function(value, key){
                 return {
                     label: key,
@@ -133,9 +145,11 @@ var str = progress({
        
   })
   //----Getting results features----//
+
   $("#showResultFile").click(function(){
-    window.open(fileResult)
+    window.open($("#resultFolderPath").val())
   })
+  /*[unused] bouton download
   $("#saveResultFile").click(function(){
     dialog.showSaveDialog({ filters: [
         { name: 'csv', extensions: ['csv'] }
@@ -147,10 +161,11 @@ var str = progress({
             }) 
     })
 })
-  })
+  })*/
   $('#openResultFileOptions').change(function(){
       if($(this).val() != "choice") {
-    var cmd = 'start '+$(this).val()+' '+path.join(__dirname, '../', fileResult);
+    //var cmd = 'start '+$(this).val()+' '+path.join(__dirname, '../', fileResult);
+    var cmd = 'start '+$(this).val()+' '+ $("#resultFolderPath").val();
     childProcess.exec(cmd, function (err, stdout, stderr) {
         if (err) {
             console.error(err);

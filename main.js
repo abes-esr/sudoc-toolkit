@@ -1,8 +1,9 @@
 //require('electron-reload')(__dirname)
-require('update-electron-app')({
-  repo: 'https://github.com/gegedenice/SudocToolkit',
-  updateInterval: '1 hour'
-})
+const setupEvents = require('./installers/setupEvents')
+ if (setupEvents.handleSquirrelEvent()) {
+    // squirrel event handled and app will exit in 1000ms, so don't do anything else
+    return;
+ }
 const { app, BrowserWindow} = require('electron')
 const path = require('path')
 
@@ -13,8 +14,8 @@ let win
 function createWindow () {
   // Créer le browser window.
   win = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 1300,
+    height: 1000,
     title: 'SudocToolkit',
     icon:path.join(__dirname, 'assets/icons/png/64x64.png'),
     webPreferences: {
