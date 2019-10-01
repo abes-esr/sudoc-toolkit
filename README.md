@@ -28,3 +28,4 @@ Les web services utilisés :
 * Télécharger la dernière release https://github.com/gegedenice/SudocToolkit/releases
 * Dézipper où vous voulez sur votre PC
 * Double-cliquer sur SudocToolkit.exe
+* Créer un raccourci sur le bureau : clic droit sur SudocToolkit.exe -> envoyer vers Bureau

@@ -1,9 +1,8 @@
 //require('electron-reload')(__dirname)
-const setupEvents = require('./installers/setupEvents')
- if (setupEvents.handleSquirrelEvent()) {
-    // squirrel event handled and app will exit in 1000ms, so don't do anything else
-    return;
- }
+require('update-electron-app')({
+  repo: 'gegedenice/SudocToolkit',
+  updateInterval: '1 hour'
+})
 const { app, BrowserWindow} = require('electron')
 const path = require('path')
 
