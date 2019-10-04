@@ -1,6 +1,6 @@
 //require('electron-reload')(__dirname)
 require('update-electron-app')({
-  repo: 'gegedenice/SudocToolkit',
+  repo: 'abes-esr/SudocToolkit',
   updateInterval: '1 hour'
 })
 const { app, BrowserWindow} = require('electron')
