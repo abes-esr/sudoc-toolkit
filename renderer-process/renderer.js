@@ -228,6 +228,7 @@ var str = progress({
                 break;
         case "multiwhere":
             request('https://www.sudoc.fr/services/multiwhere/'+id+'&format=text/json', function (error, response, body) {
+                console.log(JSON.parse(body))
                 try {
                     if(Array.isArray(JSON.parse(body).sudoc.query.result.library)) {
                     resolve(JSON.parse(body).sudoc.query.result.library.length);}
