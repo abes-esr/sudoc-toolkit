@@ -1,4 +1,4 @@
-require('electron-reload')(__dirname)
+//require('electron-reload')(__dirname)
 require('update-electron-app')({
   repo: 'gegedenice/SudocToolkit',
   updateInterval: '1 hour'

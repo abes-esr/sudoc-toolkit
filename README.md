@@ -2,7 +2,7 @@
 
 Une Interface utilisateur pour faire tourner les web services de l'Abes sans être développeur.
 
-Appliaction réalisée avec le framework Javascript [Electron](https://electronjs.org/)
+Application réalisée avec le framework Javascript [Electron](https://electronjs.org/)
 
 ![Exemple](assets/img/example.jpg)
 
