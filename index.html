@@ -42,25 +42,28 @@
                                         <span class="uk-margin-small-right" uk-icon="push"></span>
                                     Importer un fichier</button>
                             </p>
+                            <!--<div class="uk-card-footer"></div>-->
+                            <p class="uk-text-success uk-text-meta uk-text-center uk-text-break" id="selectedFile"></p>
                             </div>
                             <div class="uk-card uk-card-hover uk-card-default uk-card-body">
                             <div class="uk-column-1-2">
                                 <div class="uk-margin">
-                                        <div class="uk-form-label">Dans quelle colonne se trouve l'identifiant pivot (isbn, issn, ppn) ?</div>
+                                        <div class="uk-form-label uk-text-bold">Dans quelle colonne se trouve l'identifiant pivot (isbn, issn, ppn) ?</div>
+                                        <hr class="uk-divider-small">
                                         <div class="uk-form-controls" id="checkboxIdResult">
                                             
                                         </div>
                                     </div>
-
                                     <div class="uk-margin">
-                                        <div class="uk-form-label">Quelles colonnes voulez-vous garder en sortie ?</div>
+                                        <div class="uk-form-label uk-text-bold">Quelles colonnes voulez-vous garder en sortie ?</div>
+                                        <hr class="uk-divider-small">
                                         <div class="uk-form-controls"id="checkboxColumnsResult">
                                            
                                         </div>
                                     </div>
                                     </div>
                                     <div class="uk-margin">
-                                            <label class="uk-form-label" for="form-stacked-text">Donnez un en-tête à la colonne supplémentaire de résultats</label>
+                                            <label class="uk-form-label uk-text-bold" for="form-stacked-text">Donnez un en-tête à la colonne supplémentaire de résultats</label>
                                             <div class="uk-form-controls">
                                                 <input class="uk-input uk-form-success" id="columnResultName" type="text">
                                             </div>
@@ -69,6 +72,7 @@
                                                 <div class="uk-form-controls">
                                                         <button class="uk-button uk-button-text" id="chooseResultFolderPath">Choisir un dossier de destination pour le fichier de résultat (output.csv)</button>
                                                         <input type="hidden" id="resultFolderPath">
+                                                        <p class="uk-text-success uk-text-meta uk-text-center uk-text-break" id="selectedFolderPath"></p>
                                                 </div>
                                             </div>
                             </div>

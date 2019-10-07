@@ -23,7 +23,7 @@ var columnResultName;
 
 $('#options').change(function(){
     //first init variables
-    $("#checkboxIdResult").empty();$("#checkboxColumnsResult").empty();$('#columnResultName').val('');$('#chartContainer').empty();$('#fileResult').empty();$('#resultFolderPath').empty();
+    $("#selectedFile").empty();$("#selectedFolderPath").empty();$("#checkboxIdResult").empty();$("#checkboxColumnsResult").empty();$('#columnResultName').val('');$('#chartContainer').empty();$('#fileResult').empty();$('#resultFolderPath').empty();
     selectedOption = $(this).val();
 })
 
@@ -35,13 +35,14 @@ $( "#openSourceFile" ).click(function() {
    ]},function (fileNames) {
     if (fileNames === undefined) return; 
     fileName = fileNames[0];
+    $("#selectedFile").append(fileName)
     fs.createReadStream(fileName)
     .pipe(parse({delimiter: ';',trim: true,from_line:1,to_line:1}))
     .on('error', function (error) {
         dialog.showMessageBox(null,{message: error});
     })
     .on('data', function(csvrow) {            
-       return  csvrow.map(function(key){
+       return  csvrow.map(function(key){   
         $("#checkboxIdResult").append("<label><input class='idChoice uk-checkbox' value='" + key + "' type='checkbox' /> "+key+"</label><br>")
         $("#checkboxColumnsResult").append("<label><input class='columnsChoice uk-checkbox' value='" + key + "' type='checkbox' /> "+key+"</label><br>")   
        })   
@@ -66,6 +67,7 @@ $("#chooseResultFolderPath").click(function(){
             return;
         }else{
          $("#resultFolderPath").val(path.join(folderPaths[0],fileResult));
+         $("#selectedFolderPath").append(path.join(folderPaths[0],fileResult))
          console.log(path.join(folderPaths[0],fileResult))
         }
     })
