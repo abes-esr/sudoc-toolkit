@@ -1,7 +1,7 @@
 {
   "name": "sudoctoolkit",
   "productName": "SudocToolkit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Utiliser les web services de l'Abes sans être développeur",
   "author": "Géraldine Geoffroy",
   "main": "main.js",
@@ -24,6 +24,7 @@
     "jquery": "^3.4.1",
     "progress-stream": "^2.0.0",
     "request": "^2.88.0",
+    "requestretry": "^4.0.2",
     "underscore": "^1.9.1",
     "update-electron-app": "^1.5.0"
   }

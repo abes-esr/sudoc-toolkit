@@ -3,7 +3,7 @@ const electron = require('electron')
 const dialog = electron.remote.dialog
 const BrowserWindow = electron.remote.BrowserWindow
 const path = require('path')
-const request = require('request')
+const request = require('requestretry')
 const childProcess = require('child_process')
 
 const fs = require('fs')
@@ -105,17 +105,13 @@ var str = progress({
     getValue(record[chooseKey].toString()).then(
         function(val) {
         record = filterTypes(record,arrColumns)
+        console.log(record)
         if(val === undefined) {record[columnResultName]="2 ou +"}
         else {
           record[columnResultName]=val  
         }   
           callback(null, record)          
-         },
-         function(error) {
-            record = filterTypes(record,arrColumns)
-            record[columnResultName]="0" 
-            callback(null, record)
-        }
+         }
          )    
         })
          ) 
@@ -185,62 +181,103 @@ var str = progress({
       return result;
   }
 //sudoc web services
-  function getValue(id){
+function getValue(id){
     return new Promise(function(resolve, reject){
         switch(selectedOption) {
             case "isbn2ppncount":
-        request('https://www.sudoc.fr/services/isbn2ppn/'+id+'&format=text/json', function (error, response, body) {
-            try {
-                if(Array.isArray(JSON.parse(body).sudoc.query.result)) {
-                resolve(JSON.parse(body).sudoc.query.result.length);}
-                else {
-                    resolve("1");  
-                }
-            } catch(e) {
-               reject(e);
+        request({
+            url: 'https://www.sudoc.fr/services/isbn2ppn/'+id+'&format=text/json',
+            json: true,
+            maxAttempts: 5,
+            retryDelay: 5000,
+            retryStrategy: request.RetryStrategies.HTTPOrNetworkError
+             }, function(err, response, body){
+            if (response) {
+              if(Array.isArray(body.sudoc.query.result)) {
+                  resolve(body.sudoc.query.result.length)
+                     }
+                    else {
+                        resolve("1")
+                    }
             }
-        });
+           else {
+            resolve("0")
+            }
+          })
         break;
         case "isbn2ppn":
-            request('https://www.sudoc.fr/services/isbn2ppn/'+id+'&format=text/json', function (error, response, body) {
-                try {
-                    resolve(JSON.parse(body).sudoc.query.result.ppn) 
-                } catch(e) {
-                    reject(e);
-                 }                
-            });
+            request({
+                url: 'https://www.sudoc.fr/services/isbn2ppn/'+id+'&format=text/json',
+                json: true,
+                maxAttempts: 5, 
+                retryDelay: 5000,
+                retryStrategy: request.RetryStrategies.HTTPOrNetworkError
+                 }, function(err, response, body){
+                if (response) {
+                      resolve(body.sudoc.query.result.ppn)
+                }
+               else {
+                resolve("0")
+                }
+              })
             break;
             case "issn2ppn":
-                request('https://www.sudoc.fr/services/issn2ppn/'+id+'&format=text/json', function (error, response, body) {
-                    try {
-                        resolve(JSON.parse(body).sudoc.query.result.ppn) 
-                    } catch(e) {
-                        reject(e);
-                     }                
-                });
+                request({
+                    url: 'https://www.sudoc.fr/services/issn2ppn/'+id+'&format=text/json',
+                    json: true,
+                    maxAttempts: 5,
+                    retryDelay: 5000, 
+                    retryStrategy: request.RetryStrategies.HTTPOrNetworkError
+                     }, function(err, response, body){
+                    if (response) {
+                          resolve(body.sudoc.query.result.ppn)
+                    }
+                   else {
+                    resolve("0")
+                    }
+                  })
                 break;
             case "merged":
-                request('https://www.sudoc.fr/services/merged/'+id+'&format=text/json', function (error, response, body) {
-                    try {
-                        resolve(JSON.parse(body).sudoc.query.result.ppn); 
-                    } catch(e) {
-                       reject(e);
+                request({
+                    url: 'https://www.sudoc.fr/services/merged/'+id+'&format=text/json',
+                    json: true,
+                    maxAttempts: 5,
+                    retryDelay: 5000,
+                    retryStrategy: request.RetryStrategies.HTTPOrNetworkError
+                     }, function(err, response, body){
+                    if (response) {
+                        if(!body.sudoc) {
+                            resolve("0")
+                        }
+                        else {
+                          resolve(body.sudoc.query.result.ppn)
+                        }
                     }
-                });
+                   else {
+                    resolve("0")
+                    }
+                  })
                 break;
         case "multiwhere":
-            request('https://www.sudoc.fr/services/multiwhere/'+id+'&format=text/json', function (error, response, body) {
-                console.log(JSON.parse(body))
-                try {
-                    if(Array.isArray(JSON.parse(body).sudoc.query.result.library)) {
-                    resolve(JSON.parse(body).sudoc.query.result.library.length);}
-                    else {
-                        resolve("1");  
-                    }
-                } catch(e) {
-                   reject(e);
+            request({
+                url: 'https://www.sudoc.fr/services/multiwhere/'+id+'&format=text/json',
+                json: true,
+                maxAttempts: 5,
+                retryDelay: 5000,
+                retryStrategy: request.RetryStrategies.HTTPOrNetworkError
+                 }, function(err, response, body){
+                if (response) {
+                  if(Array.isArray(body.sudoc.query.result.library)) {
+                      resolve(body.sudoc.query.result.library.length)
+                         }
+                        else {
+                            resolve("1")
+                        }
                 }
-            });
+               else {
+                resolve("0")
+                }
+              });
             break;
     }
     });
