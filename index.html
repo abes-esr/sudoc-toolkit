@@ -1,130 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <!-- UIkit CSS -->
-  <link rel="stylesheet" href="lib/css/uikit.min.css">
-<!-- UIkit JS -->
-<script src="lib/js/uikit.min.js"></script>
-<script src="lib/js/uikit-icons.min.js"></script>
+    <meta charset="utf-8">
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="lib/uikit/css/uikit.min.css">
+    <!-- Loading.io CSS -->
+    <link rel="stylesheet" type="text/css" href="lib/loading/loading-bar.min.css" />
+    <!-- UIkit JS -->
+    <script src="lib/uikit/js/uikit.min.js"></script>
+    <script src="lib/uikit/js/uikit-icons.min.js"></script>
+    <!-- Loading.io JS -->
+    <script type="text/javascript" src="lib/loading/loading-bar.min.js"></script>
 
-  </head>
-  <body>
-        <div class="uk-container">
-                <div uk-grid class="uk-child-width-expand@s uk-grid-divider">
-                        <div class="uk-grid-item-match">
-                            <div class="uk-card uk-card-hover uk-card-default uk-card-body">
-                               <form>
-                                <div class="uk-margin">
-                                        <div uk-form-custom="target: > * > span:last-child">
-                                            <select id="options">
-                                                <option>VOUS VOULEZ...</option>
-                                                <option value="isbn2ppncount">isbn2ppn : compter le nombre de ppn renvoyés par isbn</option>
-                                                <option value="isbn2ppn">isbn2ppn : obtenir les ppn uniques par isbn</option>
-                                                <option value="issn2ppn">issn2ppn : obtenir les ppn uniques par issn</option>
-                                                <option value="merged">merged : obtenir les ppn préférés en cas de fusion</option>
-                                                <option value="multiwhere">multiwhere : compter les localisations par ppn</option>
-                                            </select>
-                                            <button class="uk-button uk-button-default" type="button" tabindex="-1">
-                                                <span></span>
-                                                <span uk-icon="icon: chevron-down"></span>
-                                            </button>
-                                        </div>
-                                    </div>
-                               </form>
+</head>
+
+<body>
+    <div class="uk-container">
+        <div uk-grid class="uk-child-width-expand@s uk-grid-divider">
+            <div class="uk-grid-item-match">
+                <div class="uk-card uk-card-hover uk-card-default uk-card-body">
+                    <button class="uk-button uk-button-danger uk-align-right" id="clear"> 
+                        Clear all</button>
+                        <h3 class="uk-card-title">Choisir le web service</h3>
+                    <form id="options">
+                    <dl class="uk-description-list">
+                        <dt>ISBN TO PPN</dt>
+                        <dd><label class="uk-margin"><input class="uk-radio" type="radio" name="ws" value="isbn2ppncount"> Compter le nombre de ppn renvoyés pour chaque ISBN</label></dd>
+                        <dd><label class="uk-margin" uk-tooltip="A n'utiliser que dans le cas d'ISBN ne renvoyant qu'un seul ppn"><input class="uk-radio" type="radio" name="ws" value="isbn2ppn"> Obtenir le ppn correspondant à chaque ISBN</label></dd>
+                        <dt>ISSN TO PPN</dt>
+                        <dd><label class="uk-margin"><input class="uk-radio" type="radio" name="ws" value="issn2ppncount"> Compter le nombre de ppn renvoyés pour chaque ISSN</label></dd>
+                        <dd><label class="uk-margin" uk-tooltip="A n'utiliser que pour dans le cas d'ISSN ne renvoyant qu'un seul ppn"><input class="uk-radio" type="radio" name="ws" value="issn2ppn"> Obtenir le ppn correspondant à chaque ISSN</label></dd>
+                        <dt>MULTIWHERE</dt>
+                        <dd><label class="uk-margin"><input class="uk-radio" type="radio" name="ws" value="multiwhere"> Obtenir le nombre de localisations par ppn</label></dd>
+                        <dt>MERGED</dt>
+                        <dd><label class="uk-margin" uk-tooltip="La liste en entrée peut contenir des ppn non fusionnés, dans ce cas le résultat sera 0"><input class="uk-radio" type="radio" name="ws" value="merged"> Obtenir les ppn préférés en cas de fusion</label></dd>
+                      </dl>
+                      </form>
+                </div>
+                <div class="uk-card uk-card-hover uk-card-default uk-card-body">
+                    <h3 class="uk-card-title">Importer le fichier</h3>
+                    <p class="uk-comment-meta uk-margin-remove-top uk-text-center">
+                        Le fichier à importer doit être en format .csv avec entêtes de colonnes.
+                    </p>
+                    <div class="uk-grid-divider uk-child-width-expand@s" uk-grid>
+                        <div>
+                            <label class="uk-form-label uk-text-bold" for="form-stacked-text">Préciser le
+                                séparateur (; ou , ou | ...)</label>
+                            <div class="uk-form-controls">
+                                <input class="uk-input uk-form-success" id="fileSep" type="text">
                             </div>
-                            <div class="uk-card uk-card-hover uk-card-default uk-card-body">
-                               <p uk-margin>
-                                    <p class="uk-comment-meta uk-margin-remove-top uk-text-center">
-                                            Le fichier à importer doit être en format .csv avec séparateur point-virgule ; et entêtes de colonnes.
-                                    </p>
-                                <button class="uk-button uk-button-secondary uk-align-center" id="openSourceFile">
-                                        <span class="uk-margin-small-right" uk-icon="push"></span>
-                                    Importer un fichier</button>
-                            </p>
-                            <!--<div class="uk-card-footer"></div>-->
-                            <p class="uk-text-success uk-text-meta uk-text-center uk-text-break" id="selectedFile"></p>
-                            </div>
-                            <div class="uk-card uk-card-hover uk-card-default uk-card-body">
-                            <div class="uk-column-1-2">
-                                <div class="uk-margin">
-                                        <div class="uk-form-label uk-text-bold">Dans quelle colonne se trouve l'identifiant pivot (isbn, issn, ppn) ?</div>
-                                        <hr class="uk-divider-small">
-                                        <div class="uk-form-controls" id="checkboxIdResult">
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="uk-margin">
-                                        <div class="uk-form-label uk-text-bold">Quelles colonnes voulez-vous garder en sortie ?</div>
-                                        <hr class="uk-divider-small">
-                                        <div class="uk-form-controls"id="checkboxColumnsResult">
-                                           
-                                        </div>
-                                    </div>
-                                    </div>
-                                    <div class="uk-margin">
-                                            <label class="uk-form-label uk-text-bold" for="form-stacked-text">Donnez un en-tête à la colonne supplémentaire de résultats</label>
-                                            <div class="uk-form-controls">
-                                                <input class="uk-input uk-form-success" id="columnResultName" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="uk-margin">
-                                                <div class="uk-form-controls">
-                                                        <button class="uk-button uk-button-text" id="chooseResultFolderPath">Choisir un dossier de destination pour le fichier de résultat (output.csv)</button>
-                                                        <input type="hidden" id="resultFolderPath">
-                                                        <p class="uk-text-success uk-text-meta uk-text-center uk-text-break" id="selectedFolderPath"></p>
-                                                </div>
-                                            </div>
-                            </div>
-                            <div class="uk-card uk-card-hover uk-card-default uk-card-body">
-                                        <button class="uk-button uk-button-primary uk-width-1-1" id="parseFile">
-                                                <span class="uk-margin-small-right" uk-icon="settings"></span>
-                                            Go !</button>
-                            </div>
-                            <div class="uk-card uk-card-hover uk-card-default uk-card-body">
-                                        <div class="uk-text-center" uk-grid>
-                                                <div class="uk-width-1-2">
-                                                  <button class="uk-button uk-button-default" id="showResultFile">
-                                                        <span class="uk-margin-small-right" uk-icon="happy"></span>  
-                                                    Apercu</button>
-                                                </div>  
-                                                <div class="uk-width-1-2">
-                                                  <button class="uk-button uk-button-primary" id="">
-                                                        <span class="uk-margin-small-right" uk-icon="file-edit"></span>  
-                                                    Ouvrir</button>
-                                                  <div uk-dropdown>
-                                                    <div class="uk-form-controls">
-                                                            <select class="uk-select" id="openResultFileOptions">
-                                                                <option value="choice">Choisir l'éditeur</option>
-                                                                <option value="Excel.exe">Excel</option>
-                                                                <option value="notepad++">Notepad</option>
-                                                            </select>
-                                                        </div>
-                                                  </div>
-                                                  </div>
-                                            <!--<button class="uk-button uk-button-secondary" id="saveResultFile">Download</button>-->
-                                        </div>
-                            </div>
-                         </div>
-                         <div class="uk-grid-item-match">
-                                                    <div class="uk-card uk-card-secondary uk-card-hover uk-card-body uk-light">
-                                                        <h3 class="uk-card-title">Traitement</h3>
-                                                        <div class="uk-column-1-4">
-                                                            <p id="fileResult"></p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="uk-card uk-card-default uk-card-hover uk-card-body">
-                                                        <h3 class="uk-card-title">Synthèse</h3>
-                                                        <div id="chartContainer" style="height: 370px; width: 100%;"></div>
-                                                    </div>                              
-                            </div>
+                        </div>
+                        <div>
+                            <button class="uk-button uk-button-link uk-align-center" id="openSourceFile">
+                                <span class="uk-margin-small-right" uk-icon="push"></span>
+                                Importer un fichier</button>
+                        </div>
                     </div>
-                    <h5 class="uk-heading-line uk-text-center uk-text-warning"><span>Source des données : Agence Bibliographique de l'Eenseignement Supérieur</span></h5>
-        </div>
+                    </p>
+                    <!--<div class="uk-card-footer"></div>-->
+                    <p class="uk-text-success uk-text-meta uk-text-center uk-text-break" id="selectedFile"></p>
+                </div>
+                <div class="uk-card uk-card-hover uk-card-default uk-card-body">
+                    <h3 class="uk-card-title">Configurer</h3>
+                    <div class="uk-column-1-2">
+                        <div class="uk-margin">
+                            <div class="uk-form-label uk-text-bold">Dans quelle colonne se trouve l'identifiant pivot
+                                (isbn, issn, ppn) ?</div>
+                            <hr class="uk-divider-small">
+                            <div class="uk-form-controls" id="checkboxIdResult"></div>
+                        </div>
+                        <div class="uk-margin">
+                            <div class="uk-form-label uk-text-bold">Quelles colonnes voulez-vous garder en sortie ?
+                            </div>
+                            <hr class="uk-divider-small">
+                            <div class="uk-form-controls" id="checkboxColumnsResult"></div>
+                        </div>
+                    </div>
+                    <div class="uk-margin">
+                        <label class="uk-form-label uk-text-bold" for="form-stacked-text">En-tête de la colonne
+                            supplémentaire de résultats</label>
+                        <div class="uk-form-controls">
+                            <input class="uk-input uk-form-success" id="columnResultName" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="uk-card uk-card-hover uk-card-default uk-card-body">
+                    <button class="uk-button uk-button-primary uk-width-1-1" id="parseFile">
+                        <span class="uk-margin-small-right" uk-icon="settings"></span>
+                        Go !</button>
+                </div>
+            </div>
+            <div class="uk-grid-item-match">
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body">
+                    <h3 class="uk-card-title">Résultats</h3>
+                    <div class="uk-grid-divider uk-child-width-expand@s" uk-grid>
+                        <div>
+                            <div class="myBar label-center"></div>
+                    </div> 
+                    <div>
+                        <button class="uk-button uk-button-primary" id="downloadResultFile">
+                            <span class="uk-margin-small-right" uk-icon="pull"></span>  
+                        Télécharger le fichier de résultats</button>
+                    </div> 
+                    </div>
+                    <hr class="uk-divider-icon">
+                    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+                </div>
+            </div>
+            </div>
+            <h5 class="uk-heading-line uk-text-center uk-text-warning">
+                <span>Source des données : Agence Bibliographique de l'Eenseignement Supérieur</span>
+            </h5>
+            </div>
+</body>
 
-        <script>window.$ = window.jQuery = require('./node_modules/jquery/dist/jquery.slim.min.js');</script>
-        <script>
-            require('./renderer-process/renderer')
-          </script>
-  </body>
-  </html>
+</html>
+</div>
+<!--<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>-->
+<script src="./node_modules/jquery/dist/jquery.min.js"></script>
+<script src="./renderer-process/renderer.js"></script>
+</body>
+
+</html>

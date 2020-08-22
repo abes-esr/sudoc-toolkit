@@ -1,8 +1,5 @@
 //require('electron-reload')(__dirname)
-require('update-electron-app')({
-  repo: 'abes-esr/SudocToolkit',
-  updateInterval: '1 hour'
-})
+
 const { app, BrowserWindow} = require('electron')
 const path = require('path')
 
@@ -18,7 +15,8 @@ function createWindow () {
     title: 'SudocToolkit',
     icon:path.join(__dirname, 'assets/icons/png/64x64.png'),
     webPreferences: {
-      nodeIntegration: true
+      enableRemoteModule: true,
+        preload: path.join(__dirname, 'preload.js')
     }
   })
 

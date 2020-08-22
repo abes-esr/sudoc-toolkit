@@ -1,7 +1,7 @@
 {
   "name": "sudoctoolkit",
   "productName": "SudocToolkit",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Utiliser les web services de l'Abes sans être développeur",
   "author": "Géraldine Geoffroy",
   "main": "main.js",
@@ -12,20 +12,16 @@
   "license": "MIT",
   "repository": "github:abes-esr/SudocToolkit",
   "devDependencies": {
-    "asar": "^2.0.1",
-    "electron": "^7.2.4",
-    "electron-packager": "^14.0.6",
-    "electron-reload": "^1.4.0",
-    "electron-winstaller": "^4.0.0"
+    "electron": "^9.2.0",
+    "electron-packager": "^15.1.0",
+    "electron-reload": "^1.5.0"
   },
   "dependencies": {
-    "canvasjs": "^1.8.1",
-    "csv": "^5.1.1",
-    "jquery": "^3.5.0",
-    "progress-stream": "^2.0.0",
-    "request": "^2.88.0",
-    "requestretry": "^4.0.2",
-    "underscore": "^1.9.1",
-    "update-electron-app": "^1.5.0"
+    "axios": "^0.19.2",
+    "canvasjs": "^1.8.3",
+    "csv-parse": "^4.12.0",
+    "jquery": "^3.5.1",
+    "papaparse": "^5.2.0",
+    "underscore": "^1.10.2"
   }
 }
