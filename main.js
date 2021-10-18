@@ -1,59 +1,58 @@
-//require('electron-reload')(__dirname)
+//live reload
+//require('electron-reload')(__dirname);
 
-const { app, BrowserWindow} = require('electron')
+require('@electron/remote/main').initialize();
+
+// Modules to control application life and create native browser window
 const path = require('path')
+const { app, BrowserWindow, dialog } = require('electron')
 
-// Gardez une reference globale de l'objet window, si vous ne le faites pas, la fenetre sera
-// fermee automatiquement quand l'objet JavaScript sera garbage collected.
 let win
 
 function createWindow () {
-  // Créer le browser window.
+  // Create the browser window.
   win = new BrowserWindow({
     width: 1300,
     height: 1000,
-    title: 'SudocToolkit',
-    icon:path.join(__dirname, 'assets/icons/png/64x64.png'),
     webPreferences: {
-      enableRemoteModule: true,
-        preload: path.join(__dirname, 'preload.js')
+      contextIsolation: true,
+      nodeIntegration: true,
+      preload: path.join(__dirname, 'preload.js')
     }
   })
 
   // and load the index.html of the app.
-  win.loadURL(path.join(__dirname, 'index.html'))
-
-  // Ouvre les DevTools.
-  //win.webContents.openDevTools()
-
-  // Émit lorsque la fenêtre est fermée.
-  win.on('closed', () => {
-    // Dé-référence l'objet window , normalement, vous stockeriez les fenêtres
-    // dans un tableau si votre application supporte le multi-fenêtre. C'est le moment
-    // où vous devez supprimer l'élément correspondant.
-    win = null
-  })
+  win.loadFile('index.html')
+  const contents = win.webContents
+  //Open the devTools
+	//contents.openDevTools()
+	require('@electron/remote/main').enable(contents)
   require('./menu/mainMenu')
+	win.on('ready-to-show', () => {
+		win.show()
+	})
 }
 
-// Cette méthode sera appelée quant Electron aura fini
-// de s'initialiser et sera prêt à créer des fenêtres de navigation.
-// Certaines APIs peuvent être utilisées uniquement quand cet événement est émit.
-app.on('ready', createWindow)
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.whenReady().then(() => {
+  createWindow()
+  
+  app.on('activate', function () {
+    // On macOS it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  })
 
-// Quitte l'application quand toutes les fenêtres sont fermées.
-app.on('window-all-closed', () => {
-  // Sur macOS, il est commun pour une application et leur barre de menu
-  // de rester active tant que l'utilisateur ne quitte pas explicitement avec Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
 })
 
-app.on('activate', () => {
-  // Sur macOS, il est commun de re-créer une fenêtre de l'application quand
-  // l'icône du dock est cliquée et qu'il n'y a pas d'autres fenêtres d'ouvertes.
-  if (win === null) {
-    createWindow()
-  }
+// Quit when all windows are closed, except on macOS. There, it's common
+// for applications and their menu bar to stay active until the user quits
+// explicitly with Cmd + Q.
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') app.quit()
 })
+
+// In this file you can include the rest of your app's specific main process
+// code. You can also put them in separate files and require them here.

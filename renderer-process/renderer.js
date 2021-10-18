@@ -29,16 +29,16 @@ $("#clear").click(function () {
 })
 //---get source file + read stream on first row to parse columns---//
 $("#openSourceFile").click(function () {
-    window.BISELECTRON.dialog.showOpenDialog({
+    window.sudocToolkitApi.dialog.showOpenDialog({
         title: 'Select file in',
         properties: ['openFile'],
         filters: [
             { name: 'csv', extensions: ['csv'] }]
     }).then((fileNames) => {
         if (fileNames === undefined) return;
-        fileContent = window.BISELECTRON.fs.readFileSync(fileNames.filePaths[0]).toString();
-        fileContentSize = fileContent.split("\n").length - 1;
-        $("#fileContentSize").append(fileContentSize)
+        //fileContent = window.sudocToolkitApi.fs.readFileSync(fileNames.filePaths[0]).toString();
+        //fileContentSize = fileContent.split("\n").length - 1;
+        //$("#fileContentSize").append(fileContentSize)
         fileName = fileNames.filePaths[0]
         if ($("#fileSep").val() != '') {
             fileSep = $("#fileSep").val()
@@ -47,23 +47,25 @@ $("#openSourceFile").click(function () {
             alert("sep must not be empty")
         }
         $("#selectedFile").append(fileName)
-        window.BISELECTRON.fs.createReadStream(fileName)
-            .pipe(window.BISELECTRON.parse({ delimiter: fileSep, trim: true, from_line: 1, to_line: 1 }))
-            .on('error', function (error) {
-                window.BISELECTRON.dialog.showMessageBox(null, { message: error });
+        window.sudocToolkitApi.fs.readFile(fileName, 'utf-8', (err, fileData) => {
+            if(err){
+                alert("An error ocurred reading the file :" + err.message);
+                return;
+            }
+            //save content file for further parsing
+            fileContent = fileData
+            //split by line
+            data = fileData.split("\r\n")
+            //save data size for further process time calculation
+            fileContentSize = data.length - 1;
+             $("#fileContentSize").append(fileContentSize)
+            //get first row with headers
+            var csv_first_row = data[0].split(fileSep)
+            return csv_first_row.map(function (key) {
+                $("#checkboxIdResult").append("<label><input class='idChoice uk-checkbox' value='" + key + "' type='checkbox' /> " + key + "</label><br>")
+                $("#checkboxColumnsResult").append("<label><input class='columnsChoice uk-checkbox' value='" + key + "' type='checkbox' /> " + key + "</label><br>")
             })
-            .on('data', function (csvrow) {
-                return csvrow.map(function (key) {
-                    $("#checkboxIdResult").append("<label><input class='idChoice uk-checkbox' value='" + key + "' type='checkbox' /> " + key + "</label><br>")
-                    $("#checkboxColumnsResult").append("<label><input class='columnsChoice uk-checkbox' value='" + key + "' type='checkbox' /> " + key + "</label><br>")
-                })
-            })
-            .on('end', function () {
-                this.destroy()
-            })
-            .on('close', function () {
-                console.log('Stream has been Closed');
-            });
+        });
     });
 })
 
@@ -78,10 +80,11 @@ $("#parseFile").click(function () {
     //progress function call 
     progressCountInterval();
     //parse action
-    window.BISELECTRON.Papa.parse(fileContent, {
+    window.sudocToolkitApi.Papa.parse(fileContent, {
         header: true,
         dynamicTyping: true,
         worker: true,
+        delimiter: fileSep,
         complete: function (result) {
             const addWSResult = (d) =>
                 getAbesWS(d[chooseKey].toString()).then(
@@ -98,7 +101,7 @@ $("#parseFile").click(function () {
             const requests = result.data.map((d, index) =>
                 new Promise(resolve =>
                     setTimeout(() => resolve(addWSResult(d)), index * 100)
-                ));
+                ))
 
             /* Promise.all(requests).then((updatedArr) => {
                console.log(updatedArr);
@@ -108,14 +111,14 @@ $("#parseFile").click(function () {
 })
 //----copy result array to file ans download---//
 $("#downloadResultFile").click(function () {
-    window.BISELECTRON.dialog.showSaveDialog({
+    window.sudocToolkitApi.dialog.showSaveDialog({
         defaultPath: "output.csv",
         filters: [
             { name: 'csv', extensions: ['csv'] }
         ]
     }).then((fileNames) => {
-        window.BISELECTRON.fs.writeFileSync(fileNames.filePath.toString(),
-            window.BISELECTRON.Papa.unparse(arrData, {
+        window.sudocToolkitApi.fs.writeFileSync(fileNames.filePath.toString(),
+            window.sudocToolkitApi.Papa.unparse(arrData, {
                 delimiter: ";",
                 header: true,
                 newline: "\r\n"
@@ -144,8 +147,8 @@ function progressCountInterval() {
     }, 500);
 }
 function getGraphicResults() {
-    var counts = window.BISELECTRON._.countBy(arrData, columnResultName);
-    var dataGraph = window.BISELECTRON._.map(counts, function (value, key) {
+    var counts = _.countBy(arrData, columnResultName);
+    var dataGraph = _.map(counts, function (value, key) {
         return {
             label: key,
             y: value
@@ -159,7 +162,7 @@ function getAbesWS(id) {
     console.log(selectedOption)
     switch (selectedOption) {
         case "isbn2ppncount":
-            return window.BISELECTRON.axios.get('https://www.sudoc.fr/services/isbn2ppn/' + id + '&format=text/json')
+            return axios.get('https://www.sudoc.fr/services/isbn2ppn/' + id + '&format=text/json')
                 .then(function (response) {
                     if (Array.isArray(response.data.sudoc.query.result)) {
                         return response.data.sudoc.query.result.length
@@ -173,7 +176,7 @@ function getAbesWS(id) {
                 })
             break;
         case "isbn2ppn":
-            return window.BISELECTRON.axios.get('https://www.sudoc.fr/services/isbn2ppn/' + id + '&format=text/json')
+            return axios.get('https://www.sudoc.fr/services/isbn2ppn/' + id + '&format=text/json')
                 .then(function (response) {
                     return response.data.sudoc.query.result.ppn
                 })
@@ -182,7 +185,7 @@ function getAbesWS(id) {
                 })
             break;
         case "issn2ppncount":
-            return window.BISELECTRON.axios.get('https://www.sudoc.fr/services/issn2ppn/' + id + '&format=text/json')
+            return axios.get('https://www.sudoc.fr/services/issn2ppn/' + id + '&format=text/json')
                 .then(function (response) {
                     if (Array.isArray(response.data.sudoc.query.result)) {
                         return response.data.sudoc.query.result.length
@@ -196,7 +199,7 @@ function getAbesWS(id) {
                 })
             break;
         case "issn2ppn":
-            return window.BISELECTRON.axios.get('https://www.sudoc.fr/services/issn2ppn/' + id + '&format=text/json')
+            return axios.get('https://www.sudoc.fr/services/issn2ppn/' + id + '&format=text/json')
                 .then(function (response) {
                     return response.data.sudoc.query.result.ppn
                 })
@@ -205,7 +208,7 @@ function getAbesWS(id) {
                 })
             break;
         case "merged":
-            return window.BISELECTRON.axios.get('https://www.sudoc.fr/services/merged/' + id + '&format=text/json')
+            return axios.get('https://www.sudoc.fr/services/merged/' + id + '&format=text/json')
                 .then(function (response) {
                     return response.data.sudoc.query.result.ppn
                 })
@@ -214,7 +217,7 @@ function getAbesWS(id) {
                 })
             break;
         case "multiwhere":
-            return window.BISELECTRON.axios.get('https://www.sudoc.fr/services/multiwhere/' + id + '&format=text/json')
+            return axios.get('https://www.sudoc.fr/services/multiwhere/' + id + '&format=text/json')
                 .then(function (response) {
                     if (Array.isArray(response.data.sudoc.query.result.library)) {
                         return response.data.sudoc.query.result.library.length
@@ -231,7 +234,7 @@ function getAbesWS(id) {
 }
 //dynamic donut charting
 function drawGraph(data, resultName, keyName, totalData) {
-    var chart = new window.BISELECTRON.CanvasJS.Chart("chartContainer", {
+    var chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
         data: [{
             type: "doughnut",

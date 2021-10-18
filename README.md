@@ -18,19 +18,19 @@ Les web services utilisés :
 
 ## Installation
 
-### Dernière mise à jour : Août 2020
+### Dernière mise à jour : octobre 2021
 
-* Denière version stable du framework Electron : 9.2.0
-* Utilisation du package [axios](https://www.npmjs.com/package/axios) au lieu de [request](https://www.npmjs.com/package/request) (qui n'est plus maintenu) pour faire les requêtes http
-* Utilisation de la librairie [Papaparse](https://www.papaparse.com/) pour lire, parser et convertir (csv -> json et json -> csv) les fichiers de données
+* Node v14.17.1
+* Dernière version stable du framework Electron : 15.1.2
+* Update de toutes les dépendances
 
 ### En mode développement dans l'environnement Node.js
 
 * Cloner le dépôt : git clone https://github.com/abes-esr/SudocToolkit.git
 * Installer les dépendances : npm install
 * Lancer : npm run start
-* Automatiser les mises à jour dans l'interface en cas de modification du code source : décommenter la 1ère ligne require('electron-reload')(__dirname) dans main.js
-* Debug avec les devtools : pour afficher la console automatiquement, décommenter cette ligne dans main.js : win.webContents.openDevTools()
+* Automatiser les mises à jour dans l'interface en cas de modification du code source (hot-reload) : décommenter la 1ère ligne require('electron-reload')(__dirname) dans main.js
+* Debug avec les devtools : pour afficher la console automatiquement, décommenter cette ligne dans main.js : contents.openDevTools()
 Sinon la console est accessible manuellement par le menu Affichage -> Inspecter (console).
 * Build (avec electron-packager) et création de l'exécutable dans /dist : npm run build
 
