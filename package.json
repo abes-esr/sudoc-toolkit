@@ -19,7 +19,7 @@
   },
   "homepage": "https://github:abes-esr/SudocToolkit#readme",
   "dependencies": {
-    "axios": "^1.8.2",
+    "axios": "^1.12.0",
     "canvasjs": "^1.8.3",
     "csv-parse": "^5.0.4",
     "jquery": "^3.6.0",
